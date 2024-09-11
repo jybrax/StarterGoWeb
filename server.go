@@ -8,7 +8,6 @@ import (
 	"wst/router"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
 )
 
 // TemplateRenderer is a custom HTML template renderer for Echo framework
@@ -53,6 +52,8 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 
 func main() {
 	e := echo.New()
+	e.Static("/css", "css")
+	e.Static("/js", "js")
 
 	// Add logging middleware
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -77,7 +78,7 @@ func main() {
 	router.Router(e)
 
 	// Start the server on port 1323
-	e.Logger.SetLevel(log.DEBUG)
+	//e.Logger.SetLevel(log.DEBUG)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
