@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"html/template"
 	"io"
 	"net/http"
@@ -36,10 +37,17 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 	// Log the template and data for debugging
 	c.Echo().Logger.Infof("Data for rendering: %+v", data)
 
-	// Execute the main layout template
+	// Create a buffer to capture the content template output
+	var contentBuffer bytes.Buffer
+
+	// Render the content template into the buffer
+	if err := contentTmpl.Execute(&contentBuffer, data); err != nil {
+		return err
+	}
+
+	// Execute the main layout template with the rendered content
 	return tmpl.ExecuteTemplate(w, "base.html", map[string]interface{}{
-		"ContentTemplate": name,
-		"Data":            data,
+		"Content": template.HTML(contentBuffer.String()), // Mark as HTML
 	})
 }
 
@@ -54,13 +62,11 @@ func main() {
 		}
 	})
 
-	// Load all templates, including layouts and views
 	renderer := &TemplateRenderer{
 		templates: template.Must(template.ParseGlob("layouts/*.html")),
 	}
 	renderer.templates = template.Must(renderer.templates.ParseGlob("view/*.html"))
 
-	// Log loaded templates for debugging
 	for _, tmpl := range renderer.templates.Templates() {
 		e.Logger.Infof("Loaded template: %s", tmpl.Name())
 	}
