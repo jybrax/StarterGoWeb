@@ -49,36 +49,40 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 		"Content": template.HTML(contentBuffer.String()), // Mark as HTML
 	})
 }
-
 func main() {
 	e := echo.New()
 	e.Static("/css", "css")
 	e.Static("/js", "js")
 
-	// Add logging middleware
-	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			e.Logger.Infof("Handling %s %s", c.Request().Method, c.Request().URL.Path)
-			return next(c)
+	// Ajoute le gestionnaire d'erreur personnalisé
+	e.HTTPErrorHandler = func(err error, c echo.Context) {
+		code := http.StatusInternalServerError
+		if he, ok := err.(*echo.HTTPError); ok {
+			code = he.Code
 		}
-	})
+
+		// Gérer les erreurs 404
+		if code == http.StatusNotFound {
+			c.Render(http.StatusNotFound, "404.html", map[string]interface{}{
+				"message": "La page que vous cherchez est introuvable.",
+			})
+			return
+		}
+
+		// Pour les autres erreurs, affiche un message générique
+		c.String(code, "Une erreur est survenue.")
+	}
 
 	renderer := &TemplateRenderer{
 		templates: template.Must(template.ParseGlob("layouts/*.html")),
 	}
 	renderer.templates = template.Must(renderer.templates.ParseGlob("view/*.html"))
 
-	for _, tmpl := range renderer.templates.Templates() {
-		e.Logger.Infof("Loaded template: %s", tmpl.Name())
-	}
-
 	e.Renderer = renderer
 
-	// Set up routes
+	// Routes
 	routers.Router(e)
 
-	// Start the server on port 1323
-	//e.Logger.SetLevel(log.DEBUG)
-
+	// Démarrer le serveur sur le port 1323
 	e.Logger.Fatal(e.Start(":1323"))
 }
