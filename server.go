@@ -50,10 +50,9 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 	})
 }
 func main() {
+
 	e := echo.New()
-	e.Static("/css", "css")
-	e.Static("/js", "js")
-	e.Static("/imgs", "imgs")
+	e.Static("/", "public")
 
 	// Ajoute le gestionnaire d'erreur personnalisé
 	e.HTTPErrorHandler = func(err error, c echo.Context) {
@@ -75,9 +74,9 @@ func main() {
 	}
 
 	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseGlob("layouts/*.html")),
+		templates: template.Must(template.ParseGlob("public/layouts/*.html")),
 	}
-	renderer.templates = template.Must(renderer.templates.ParseGlob("view/*.html"))
+	renderer.templates = template.Must(renderer.templates.ParseGlob("public/view/*.html"))
 
 	e.Renderer = renderer
 

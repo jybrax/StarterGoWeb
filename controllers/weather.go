@@ -8,7 +8,7 @@ import (
 )
 
 func GetWeatherHandler(c echo.Context) error {
-	weatherData, err := servicesWeather.GetWeather() // Appel au service
+	weatherData, err := servicesWeather.GetWeather("paris") // Appel au service
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Erreur lors de la récupération des données météo")
 	}
