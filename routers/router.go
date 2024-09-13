@@ -17,8 +17,8 @@ func Router(e *echo.Echo) {
 // Home handler (renders index.html)
 func home(c echo.Context) error {
 	data := map[string]interface{}{
-		"title":   "Home Page",
-		"message": "This is the home page",
+		"title":   "Bienvenu sur go starter webpack",
+		"message": "tu retrouvera tout pour créer ton application web. De plus tu peux utiliser la doc pour mieux comprendre sur /////",
 	}
 	c.Echo().Logger.Infof("Rendering / with data: %+v", data)
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{

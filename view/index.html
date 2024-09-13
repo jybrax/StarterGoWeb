@@ -1,4 +1,6 @@
-<h1>{{ .Data.title}}</h1>
-<p>{{ .Data.message}}</p>
-<a href="/about">about</a>
-<a href="/weather">weather</a>
+<div class="container-content">
+    {{ template "navbar" }}
+    <h1>{{ .Data.title }}</h1>
+    <p>{{ .Data.message }}</p>
+</div>
+

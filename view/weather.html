@@ -1,6 +1,10 @@
-<h1>{{ .Data.title }}</h1>
-<p>{{ .Data.message }}</p>
 
-<h2>Météo pour {{ .Data.weather.City }}</h2>
-<p>Température: {{ .Data.weather.Temperature }}</p>
-<p>Conditions: {{ .Data.weather.Weather }}</p>
+<div class="container-content">
+    {{ template "navbar" }}
+    <h1>{{ .Data.title }}</h1>
+    <p>{{ .Data.message }}</p>
+
+    <h2>Météo pour {{ .Data.weather.City }}</h2>
+    <p>Température: {{ .Data.weather.Temperature }}</p>
+    <p>Conditions: {{ .Data.weather.Weather }}</p>
+</div>

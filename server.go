@@ -53,6 +53,7 @@ func main() {
 	e := echo.New()
 	e.Static("/css", "css")
 	e.Static("/js", "js")
+	e.Static("/imgs", "imgs")
 
 	// Ajoute le gestionnaire d'erreur personnalisé
 	e.HTTPErrorHandler = func(err error, c echo.Context) {
