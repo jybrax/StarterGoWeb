@@ -1,1 +1,43 @@
+# Fichiers binaires compilés
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Répertoires de build
+/bin/
+/build/
+/dist/
+/obj/
+
+# Répertoires spécifiques à Go
+/vendor/
+
+# Fichiers de configuration Go
+go.sum
+go.mod
+
+# Fichiers temporaires
+*.tmp
+*.log
+*.swp
+*.swo
+
+# Fichiers de dépendances Go spécifiques
+Gopkg.lock
+Gopkg.toml
+
+# Fichiers d'environnement
 .env
+
+# IDE/Editor configurations
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vscode/
+
+# Système de gestion de version
+.DS_Store
+.Thumbs.db
