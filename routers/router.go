@@ -2,7 +2,7 @@ package router
 
 import (
 	"net/http"
-	servicesWeather "wst/services" // Assure-toi que le chemin d'importation est correct
+	servicesWeather "wst/services"
 
 	"github.com/labstack/echo/v4"
 )
@@ -43,9 +43,9 @@ func about(c echo.Context) error {
 func weather(c echo.Context) error {
 	// Récupérer les données météo
 	weatherData, err := servicesWeather.GetWeatherJson()
+
 	if err != nil {
 		c.Echo().Logger.Errorf("Erreur lors de la récupération des données météo: %v", err)
-		return c.JSON(http.StatusInternalServerError, "Erreur lors de la récupération des données météo")
 	}
 
 	data := map[string]interface{}{
