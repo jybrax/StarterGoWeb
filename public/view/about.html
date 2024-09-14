@@ -2,29 +2,4 @@
     {{ template "navbar" }}
     <h1>{{ .Data.title }}</h1>
     <p>{{ .Data.message }}</p>
-    <div class="container-alert">
-        {{ if .Data.successMessage }}
-        <div class="alert alert-success">
-            {{ .Data.successMessage }}
-        </div>
-    {{ end }}
-    </div>
-
-
-    <form class="row gy-2 gx-3 align-items-center" method="POST" action="/submit-form">
-        <div class="col-auto">
-          <label class="visually-hidden" for="autoSizingInput">Name</label>
-          <input type="text" class="form-control" id="autoSizingInput" name="name" placeholder="Jane Doe">
-        </div>
-        <div class="col-auto">
-          <label class="visually-hidden" for="autoSizingInputGroup">Username</label>
-          <div class="input-group">
-            <div class="input-group-text">@</div>
-            <input type="text" class="form-control" id="autoSizingInputGroup" name="username" placeholder="Username">
-          </div>
-        </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-    </form>
 </div>

@@ -12,6 +12,7 @@ func Router(e *echo.Echo) {
 	e.GET("/", home)
 	e.GET("/about", about)
 	e.GET("/weather", weather)
+	e.GET("/user", user)
 	e.POST("/submit-form", controllers.SubmitFormHandler)
 }
 
@@ -28,14 +29,26 @@ func home(c echo.Context) error {
 	})
 }
 
-// Login handler (renders login.html)
+// about handler (renders about.html)
 func about(c echo.Context) error {
+	data := map[string]interface{}{
+		"title":   "About Page",
+		"message": "This is the about page",
+	}
+
+	return c.Render(http.StatusOK, "about.html", map[string]interface{}{
+		"ContentTemplate": "about.html",
+		"Data":            data,
+	})
+}
+
+func user(c echo.Context) error {
 	// Récupérer le message de succès s'il existe
 	successMessage := c.QueryParam("success")
 
 	data := map[string]interface{}{
-		"title":   "About Page",
-		"message": "This is the about page",
+		"title":   "User Page",
+		"message": "This is the user page",
 	}
 
 	// Ajouter le message de succès dans les données, s'il existe
@@ -43,8 +56,8 @@ func about(c echo.Context) error {
 		data["successMessage"] = successMessage
 	}
 
-	return c.Render(http.StatusOK, "about.html", map[string]interface{}{
-		"ContentTemplate": "about.html",
+	return c.Render(http.StatusOK, "user.html", map[string]interface{}{
+		"ContentTemplate": "user.html",
 		"Data":            data,
 	})
 }
