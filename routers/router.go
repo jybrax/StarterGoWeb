@@ -2,7 +2,7 @@ package routers
 
 import (
 	"net/http"
-	controllers "wst/controllers"
+	"wst/controllers"
 
 	"github.com/labstack/echo/v4"
 )

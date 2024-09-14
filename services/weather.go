@@ -7,8 +7,8 @@ import (
 	"log"
 	"os"
 
-	database "wst/libs"
-	models "wst/models"
+	"wst/libs"
+	"wst/models"
 
 	"github.com/joho/godotenv"
 )
@@ -18,7 +18,7 @@ func GetWeatherSql() ([]models.WeatherModel, error) {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	sqlData := database.SqlData{
+	sqlData := libs.SqlData{
 		Username:     os.Getenv("DB_USER"),
 		Password:     os.Getenv("DB_PASSWORD"),
 		Host:         os.Getenv("DB_HOST"),

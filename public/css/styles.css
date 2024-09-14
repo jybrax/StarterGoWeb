@@ -10,3 +10,6 @@ body{
 .nav-link{
     color:white !important;
 }
+.container-alert{
+    width: 25vw;
+}

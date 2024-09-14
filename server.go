@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
-	routers "wst/routers"
+	"wst/routers"
 
 	"github.com/labstack/echo/v4"
 )
