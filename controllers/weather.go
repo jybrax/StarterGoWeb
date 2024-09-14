@@ -1,19 +1,16 @@
-package controllersWeather
+package controllers
 
 import (
-	"net/http"
-	servicesWeather "wst/services" // Import du service via le module "wst"
-
-	"github.com/labstack/echo/v4"
+	"fmt"
+	modelsWeather "wst/models"
+	services "wst/services" // Import du service via le module "wst"
 )
 
-func GetWeatherHandler(c echo.Context) error {
-	weatherData, err := servicesWeather.GetWeather("paris") // Appel au service
+func GetWeatherAll() ([]modelsWeather.WeatherModel, error) {
+	weatherData, err := services.GetWeatherJson()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "Erreur lors de la récupération des données météo")
+		return nil, fmt.Errorf("Erreur lors de la récupération des données météo: %v", err)
 	}
 
-	return c.Render(http.StatusOK, "weather.html", map[string]interface{}{
-		"weather": weatherData,
-	})
+	return weatherData, nil
 }

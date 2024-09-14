@@ -1,4 +1,4 @@
-package modelsWeather
+package models
 
 // WeatherModel représente les données météo
 type WeatherModel struct {

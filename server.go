@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
-	router "wst/routers"
+	routers "wst/routers"
 
 	"github.com/labstack/echo/v4"
 )
@@ -80,7 +80,7 @@ func main() {
 	e.Renderer = renderer
 
 	// Routes
-	router.Router(e)
+	routers.Router(e)
 
 	// Démarrer le serveur sur le port 1323
 	e.Logger.Fatal(e.Start(":1323"))

@@ -1,8 +1,8 @@
-package router
+package routers
 
 import (
 	"net/http"
-	servicesWeather "wst/services"
+	controllers "wst/controllers"
 
 	"github.com/labstack/echo/v4"
 )
@@ -12,6 +12,7 @@ func Router(e *echo.Echo) {
 	e.GET("/", home)
 	e.GET("/about", about)
 	e.GET("/weather", weather)
+	e.POST("/submit-form", controllers.SubmitFormHandler)
 }
 
 // Home handler (renders index.html)
@@ -29,11 +30,19 @@ func home(c echo.Context) error {
 
 // Login handler (renders login.html)
 func about(c echo.Context) error {
+	// Récupérer le message de succès s'il existe
+	successMessage := c.QueryParam("success")
+
 	data := map[string]interface{}{
-		"title":   "about Page",
+		"title":   "About Page",
 		"message": "This is the about page",
 	}
-	c.Echo().Logger.Infof("Rendering /about with data: %+v", data)
+
+	// Ajouter le message de succès dans les données, s'il existe
+	if successMessage != "" {
+		data["successMessage"] = successMessage
+	}
+
 	return c.Render(http.StatusOK, "about.html", map[string]interface{}{
 		"ContentTemplate": "about.html",
 		"Data":            data,
@@ -41,8 +50,7 @@ func about(c echo.Context) error {
 }
 
 func weather(c echo.Context) error {
-	// Récupérer les données météo
-	weatherData, err := servicesWeather.GetWeatherJson()
+	weatherData, err := controllers.GetWeatherAll()
 
 	if err != nil {
 		c.Echo().Logger.Errorf("Erreur lors de la récupération des données météo: %v", err)
