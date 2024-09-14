@@ -1,4 +1,4 @@
-package routers
+package router
 
 import (
 	"net/http"
@@ -42,7 +42,7 @@ func about(c echo.Context) error {
 
 func weather(c echo.Context) error {
 	// Récupérer les données météo
-	weatherData, err := servicesWeather.GetWeather("paris")
+	weatherData, err := servicesWeather.GetWeather()
 	if err != nil {
 		c.Echo().Logger.Errorf("Erreur lors de la récupération des données météo: %v", err)
 		return c.JSON(http.StatusInternalServerError, "Erreur lors de la récupération des données météo")

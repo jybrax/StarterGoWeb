@@ -3,8 +3,9 @@ package servicesWeather
 import (
 	"database/sql"
 	"fmt"
-	"log" // Assure-toi que le chemin d'importation est correct
+	"log"
 	"os"
+
 	database "wst/libs"
 	modelsWeather "wst/models"
 
@@ -12,7 +13,7 @@ import (
 )
 
 // GetWeather récupère les données météo pour une ville
-func GetWeather(city string) (modelsWeather.WeatherModel, error) {
+func GetWeather() (modelsWeather.WeatherModel, error) {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -30,16 +31,16 @@ func GetWeather(city string) (modelsWeather.WeatherModel, error) {
 	defer db.Close()
 
 	// Requête SQL pour récupérer la météo d'une ville
-	query := `SELECT * FROM Meteo WHERE city = ?`
+	query := `SELECT * FROM Meteo`
 
 	// Créer une instance vide du modèle météo
 	var weather modelsWeather.WeatherModel
 
 	// Utiliser la connexion à la base de données depuis le package config
-	err = db.QueryRow(query, city).Scan(&weather.City, &weather.Temperature, &weather.Weather, &weather.Date)
+	err = db.QueryRow(query).Scan(&weather.City, &weather.Temperature, &weather.Weather, &weather.Date)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return weather, fmt.Errorf("Aucune donnée trouvée pour la ville : %s", city)
+			return weather, fmt.Errorf("Aucune donnée trouvée")
 		}
 		return weather, fmt.Errorf("Erreur lors de la récupération de la météo: %v", err)
 	}
