@@ -42,7 +42,7 @@ func about(c echo.Context) error {
 
 func weather(c echo.Context) error {
 	// Récupérer les données météo
-	weatherData, err := servicesWeather.GetWeather()
+	weatherData, err := servicesWeather.GetWeatherJson()
 	if err != nil {
 		c.Echo().Logger.Errorf("Erreur lors de la récupération des données météo: %v", err)
 		return c.JSON(http.StatusInternalServerError, "Erreur lors de la récupération des données météo")
@@ -51,7 +51,7 @@ func weather(c echo.Context) error {
 	data := map[string]interface{}{
 		"title":   "Weather Page",
 		"message": "Voici les informations météorologiques :",
-		"weather": weatherData, // Passer les données météo dans le template
+		"weather": weatherData, // Assurez-vous que weatherData est une slice
 	}
 	c.Echo().Logger.Infof("Rendering /weather avec data: %+v", data)
 	return c.Render(http.StatusOK, "weather.html", map[string]interface{}{

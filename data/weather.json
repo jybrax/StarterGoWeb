@@ -1,7 +1,32 @@
-{
+[
+  {
     "city": "Paris",
     "temperature": "18°C",
     "weather": "Partiellement nuageux",
     "date": "14/07/2024"
+  },
+  {
+    "city": "Londres",
+    "temperature": "15°C",
+    "weather": "Pluie légère",
+    "date": "14/07/2024"
+  },
+  {
+    "city": "New York",
+    "temperature": "22°C",
+    "weather": "Ensoleillé",
+    "date": "14/07/2024"
+  },
+  {
+    "city": "Tokyo",
+    "temperature": "27°C",
+    "weather": "Humide",
+    "date": "14/07/2024"
+  },
+  {
+    "city": "Sydney",
+    "temperature": "20°C",
+    "weather": "Nuageux",
+    "date": "14/07/2024"
   }
-  
+]

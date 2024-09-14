@@ -1,12 +1,35 @@
-
 <div class="container-content">
     {{ template "navbar" }}
     <h1>{{ .Data.title }}</h1>
     <p>{{ .Data.message }}</p>
-
-    <h2>Météo pour {{ .Data.weather.City }}</h2>
-    <p>Température: {{ .Data.weather.Temperature }}</p>
-    <p>Temps: {{ .Data.weather.Weather }}</p>
-    <p>Jour: {{ .Data.weather.Date }}</p>
-    <p>test</p>
+        <div class="container mt-4">
+        {{ if .Data.weather }}
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Ville</th>
+                        <th scope="col">Température</th>
+                        <th scope="col">Temps</th>
+                        <th scope="col">Jour</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range $index, $weather := .Data.weather }}
+                        <tr>
+                            <td>{{ $weather.City }}</td>
+                            <td>{{ $weather.Temperature }}</td>
+                            <td>{{ $weather.Weather }}</td>
+                            <td>{{ $weather.Date }}</td>
+                        </tr>
+                    {{ else }}
+                        <tr>
+                            <td colspan="4">Aucune donnée météo disponible.</td>
+                        </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        {{ else }}
+            <p>Les données météo n'ont pas été chargées.</p>
+        {{ end }}
+    </div>
 </div>
