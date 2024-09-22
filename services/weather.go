@@ -5,27 +5,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 
 	"wst/libs"
 	"wst/models"
-
-	"github.com/joho/godotenv"
 )
 
 // GetWeather récupère toutes les données météo
 func GetWeatherSql() ([]models.WeatherModel, error) {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	sqlData := libs.SqlData{
-		Username:     os.Getenv("DB_USER"),
-		Password:     os.Getenv("DB_PASSWORD"),
-		Host:         os.Getenv("DB_HOST"),
-		DataBaseName: os.Getenv("DB_NAME"),
-	}
 
-	db, err := sqlData.ConnectMysql()
+	db, err := libs.ConnectMysql()
 	if err != nil {
 		log.Fatal("Erreur de connexion à la base de données:", err)
 	}

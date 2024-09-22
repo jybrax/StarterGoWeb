@@ -1,0 +1,7 @@
+{
+    "Username":"root",
+    "Password":"",
+    "Host":"localhost:3306",
+    "DataBaseName":"Golang",
+    "SslMode":""
+}

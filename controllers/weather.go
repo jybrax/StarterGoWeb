@@ -7,7 +7,7 @@ import (
 )
 
 func GetWeatherAll() ([]models.WeatherModel, error) {
-	weatherData, err := services.GetWeatherJson()
+	weatherData, err := services.GetWeatherSql()
 	if err != nil {
 		return nil, fmt.Errorf("Erreur lors de la récupération des données météo: %v", err)
 	}

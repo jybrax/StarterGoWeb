@@ -2,30 +2,42 @@ package libs
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
 
-type SqlData struct {
-	Username     string
-	Password     string
-	Host         string
-	DataBaseName string
-	SslMode      string
+type Config struct {
+	Username     string `json:"Username"`
+	Password     string `json:"Password"`
+	Host         string `json:"Host"`
+	DataBaseName string `json:"DataBaseName"`
+	SslMode      string `json:"SslMode"`
 }
 
-// Interface pour la connexion
-type SqlConnecter interface {
-	ConnectMysql() (*sql.DB, error)
-	ConnectPostgreSql() (*sql.DB, error)
-	ExecuteQuery(query string, db *sql.DB) (*sql.Rows, error)
+func LoadConfig() Config {
+	file, err := os.Open("sqlConfig.json")
+	if err != nil {
+		return Config{}
+	}
+	defer file.Close()
+
+	var config Config
+	decoder := json.NewDecoder(file)
+	if err := decoder.Decode(&config); err != nil {
+		return Config{}
+	}
+
+	return config
 }
 
-// Méthode pour se connecter à MySQL
-func (s SqlData) ConnectMysql() (*sql.DB, error) {
-	connStr := fmt.Sprintf("%s:%s@tcp(%s)/%s", s.Username, s.Password, s.Host, s.DataBaseName)
+// Méthode connexion à la base MySQL
+func ConnectMysql() (*sql.DB, error) {
+	config := LoadConfig()
+	connStr := fmt.Sprintf("%s:%s@tcp(%s)/%s", config.Username, config.Password, config.Host, config.DataBaseName)
 
 	db, err := sql.Open("mysql", connStr)
 	if err != nil {
@@ -41,9 +53,10 @@ func (s SqlData) ConnectMysql() (*sql.DB, error) {
 	return db, nil
 }
 
-// Méthode pour se connecter à PostgreSQL
-func (s SqlData) ConnectPostgreSql() (*sql.DB, error) {
-	connStr := fmt.Sprintf("user=%s password=%s host=%s dbname=%s sslmode=%s", s.Username, s.Password, s.Host, s.DataBaseName, s.SslMode)
+// Méthode connexion à la base PostgreSQL
+func ConnectPostgreSql() (*sql.DB, error) {
+	config := LoadConfig()
+	connStr := fmt.Sprintf("user=%s password=%s host=%s dbname=%s sslmode=%s", config.Username, config.Password, config.Host, config.DataBaseName, config.SslMode)
 
 	DB, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -57,12 +70,4 @@ func (s SqlData) ConnectPostgreSql() (*sql.DB, error) {
 	}
 
 	return DB, nil
-}
-
-func (s SqlData) ExecuteQuery(query string, db *sql.DB) (*sql.Rows, error) {
-	rows, err := db.Query(query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to execute query: %v", err)
-	}
-	return rows, nil
 }
