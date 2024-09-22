@@ -17,3 +17,10 @@ body{
 .about-form{
     width: 100%;
 }
+.form-login{
+    width: 17vw;
+}
+.container-content{
+    width: 100vw;
+    height: 100vh;
+}

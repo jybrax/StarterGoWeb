@@ -1,5 +1,5 @@
 <div class="container-content">
-    {{ template "navbar" }}
+    {{ template "navbar" .}}
     <h1>{{ .Data.title }}</h1>
     <p>{{ .Data.message }}</p>
     <div class="container-alert">
@@ -18,10 +18,7 @@
         </div>
         <div class="col-auto">
           <label class="visually-hidden" for="autoSizingInputGroup">password</label>
-          <div class="input-group">
-            <div class="input-group-text">@</div>
-            <input type="password" class="form-control" id="autoSizingInputGroup" name="password" >
-          </div>
+          <input type="password" class="form-control" id="autoSizingInputGroup" name="password">
         </div>
         <div class="col-auto">
           <button type="submit" class="btn btn-primary">Submit</button>

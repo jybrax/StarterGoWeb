@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"wst/middlewares"
 	"wst/routers"
 
 	"github.com/labstack/echo/v4"
@@ -51,6 +52,7 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 func main() {
 	e := echo.New()
+	e.Use(middlewares.LoggingMiddleware)
 	e.Static("/", "public")
 
 	// Ajoute le gestionnaire d'erreur personnalisé
