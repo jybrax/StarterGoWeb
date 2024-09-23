@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/gob"
 	"html/template"
 	"io"
 	"net/http"
@@ -51,6 +52,9 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 	})
 }
 func main() {
+	// Enregistrer les types utilisés dans la session
+	gob.Register(map[string]interface{}{})
+
 	e := echo.New()
 	e.Use(middlewares.LoggingMiddleware)
 	e.Static("/", "public")

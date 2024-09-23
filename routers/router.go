@@ -3,6 +3,7 @@ package routers
 import (
 	"net/http"
 	"wst/controllers"
+	"wst/libs"
 	"wst/middlewares"
 
 	"github.com/gorilla/sessions"
@@ -27,8 +28,6 @@ func Router(e *echo.Echo) {
 }
 
 func submitLogin(c echo.Context) error {
-	sess, _ := session.Get("session", c)
-
 	// Authentifier l'utilisateur
 	err := controllers.SubmitLoginHandler(c)
 	if err != nil {
@@ -37,12 +36,24 @@ func submitLogin(c echo.Context) error {
 			"error": "Nom d'utilisateur ou mot de passe incorrect",
 		})
 	}
+	// exemple de valeur que peux ajouter dans la session
+	sessionData := map[string]interface{}{
+		"userID":    1,
+		"userName":  "JohnDoe",
+		"roles":     []string{"admin", "editor"},
+		"loggedIn":  true,
+		"lastLogin": "2024-09-23",
+	}
 
-	// Enregistrer l'utilisateur comme authentifié dans la session
-	sess.Values["authenticated"] = true // Assurez-vous que cette ligne est bien là
-	err = sess.Save(c.Request(), c.Response())
+	// Creation de la session utilisateur
+	libs.CreateSession(c, sessionData)
+
+	// Récupérer et afficher les données stockées
+	_, data, err := libs.GetSessionData(c)
 	if err != nil {
-		c.Echo().Logger.Errorf("Erreur lors de la sauvegarde de la session: %v", err)
+		c.Echo().Logger.Errorf("Erreur lors de la récupération de la session: %v", err)
+	} else {
+		c.Echo().Logger.Infof("Données de session récupérées: %v", data)
 	}
 
 	// Rediriger vers la page d'accueil après connexion
@@ -51,9 +62,7 @@ func submitLogin(c echo.Context) error {
 
 func logout(c echo.Context) error {
 	// Supprimer la session
-	session, _ := store.Get(c.Request(), "session")
-	session.Options.MaxAge = -1 // Expirer immédiatement la session
-	session.Save(c.Request(), c.Response())
+	libs.DeleteSession(c)
 
 	return c.Redirect(http.StatusSeeOther, "/")
 }
@@ -68,14 +77,18 @@ func login(c echo.Context) error {
 
 // Home handler (renders index.html)
 func home(c echo.Context) error {
-	sess, _ := session.Get("session", c)
-	authenticated := sess.Values["authenticated"] != nil && sess.Values["authenticated"].(bool)
-
-	data := map[string]interface{}{
-		"title":         "Bienvenue sur go starter webpack",
-		"message":       "Tu retrouveras tout pour créer ton application web.",
-		"authenticated": authenticated,
+	authenticated, data, err := libs.GetSessionData(c)
+	if err != nil {
+		// Gérer le cas où l'utilisateur n'est pas authentifié
+		authenticated = false
+		data = map[string]interface{}{}
 	}
+
+	// Ajouter des informations supplémentaires à la page
+	data["title"] = "Bienvenue sur go starter webpack"
+	data["message"] = "Tu retrouveras tout pour créer ton application web."
+	data["authenticated"] = authenticated
+	data["userName"] = data["userName"]
 
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
 		"ContentTemplate": "index.html",
@@ -84,14 +97,16 @@ func home(c echo.Context) error {
 }
 
 func about(c echo.Context) error {
-	sess, _ := session.Get("session", c)
-	authenticated := sess.Values["authenticated"] != nil && sess.Values["authenticated"].(bool)
-
-	data := map[string]interface{}{
-		"title":         "About Page",
-		"message":       "This is the about page",
-		"authenticated": authenticated,
+	authenticated, data, err := libs.GetSessionData(c)
+	if err != nil {
+		// Gérer le cas où l'utilisateur n'est pas authentifié
+		authenticated = false
+		data = map[string]interface{}{}
 	}
+	data["title"] = "About Page"
+	data["message"] = "This is the about page"
+	data["authenticated"] = authenticated
+	data["userName"] = data["userName"]
 
 	return c.Render(http.StatusOK, "about.html", map[string]interface{}{
 		"ContentTemplate": "about.html",
@@ -100,14 +115,16 @@ func about(c echo.Context) error {
 }
 
 func user(c echo.Context) error {
-	sess, _ := session.Get("session", c)
-	authenticated := sess.Values["authenticated"] != nil && sess.Values["authenticated"].(bool)
-
-	data := map[string]interface{}{
-		"title":         "User Page",
-		"message":       "This is the user page",
-		"authenticated": authenticated,
+	authenticated, data, err := libs.GetSessionData(c)
+	if err != nil {
+		// Gérer le cas où l'utilisateur n'est pas authentifié
+		authenticated = false
+		data = map[string]interface{}{}
 	}
+	data["title"] = "User Page"
+	data["message"] = "This is the user page"
+	data["authenticated"] = authenticated
+	data["userName"] = data["userName"]
 
 	return c.Render(http.StatusOK, "user.html", map[string]interface{}{
 		"ContentTemplate": "user.html",
@@ -116,20 +133,22 @@ func user(c echo.Context) error {
 }
 
 func weather(c echo.Context) error {
-	sess, _ := session.Get("session", c)
-	authenticated := sess.Values["authenticated"] != nil && sess.Values["authenticated"].(bool)
-
+	authenticated, data, err := libs.GetSessionData(c)
+	if err != nil {
+		// Gérer le cas où l'utilisateur n'est pas authentifié
+		authenticated = false
+		data = map[string]interface{}{}
+	}
 	weatherData, err := controllers.GetWeatherAll()
 	if err != nil {
 		c.Echo().Logger.Errorf("Erreur lors de la récupération des données météo: %v", err)
 	}
+	data["title"] = "Weather Page"
+	data["message"] = "Voici les informations météorologiques :"
+	data["authenticated"] = authenticated
+	data["weather"] = weatherData
+	data["userName"] = data["userName"]
 
-	data := map[string]interface{}{
-		"title":         "Weather Page",
-		"message":       "Voici les informations météorologiques :",
-		"weather":       weatherData,
-		"authenticated": authenticated,
-	}
 	return c.Render(http.StatusOK, "weather.html", map[string]interface{}{
 		"ContentTemplate": "weather.html",
 		"Data":            data,
