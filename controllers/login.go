@@ -13,6 +13,7 @@ type VerifUserFunc func(user models.UserModel) error
 func SubmitLoginHandler(c echo.Context, verifUser VerifUserFunc) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
+	data := make(map[string]interface{})
 
 	user := models.UserModel{
 		UserName: username,
@@ -21,9 +22,12 @@ func SubmitLoginHandler(c echo.Context, verifUser VerifUserFunc) error {
 
 	err := verifUser(user)
 	if err != nil {
+		data["messageError"] = "Nom d'utilisateur ou mot de passe incorrect"
 		log.Printf("Erreur d'authentification : %v", err)
+		c.Echo().Logger.Infof("Rendering login.html with error message.")
 		return c.Render(http.StatusUnauthorized, "login.html", map[string]interface{}{
-			"error": "Nom d'utilisateur ou mot de passe incorrect",
+			"ContentTemplate": "login.html",
+			"Data":            data,
 		})
 	}
 

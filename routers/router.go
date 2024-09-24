@@ -33,11 +33,10 @@ func SubmitLogin(c echo.Context) error {
 	err := controllers.SubmitLoginHandler(c, services.VerifUserSql)
 	if err != nil {
 		c.Echo().Logger.Errorf("Erreur lors de la soumission du login: %v", err)
-		return c.Render(http.StatusUnauthorized, "login.html", map[string]interface{}{
-			"error": "Nom d'utilisateur ou mot de passe incorrect",
-		})
+		return nil
 	}
-	// exemple de valeur que peux ajouter dans la session
+
+	// Si l'authentification réussit, créer une session et rediriger
 	sessionData := map[string]interface{}{
 		"userID":    1,
 		"userName":  "JohnDoe",
@@ -46,7 +45,7 @@ func SubmitLogin(c echo.Context) error {
 		"lastLogin": "2024-09-23",
 	}
 
-	// Creation de la session utilisateur
+	// Création de la session utilisateur
 	libs.CreateSession(c, sessionData)
 
 	// Récupérer et afficher les données stockées
