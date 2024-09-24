@@ -5,6 +5,7 @@ import (
 	"wst/controllers"
 	"wst/libs"
 	"wst/middlewares"
+	"wst/services"
 
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
@@ -22,14 +23,14 @@ func Router(e *echo.Echo) {
 	e.GET("/weather", middlewares.AuthMiddleware(weather))
 	e.GET("/user", user)
 	e.GET("/login", login)               // Page de connexion
-	e.POST("/submit-login", submitLogin) // Soumission du formulaire de connexion
+	e.POST("/submit-login", SubmitLogin) // Soumission du formulaire de connexion
 	e.GET("/logout", logout)             // Route de déconnexion
 	e.POST("/submit-form", controllers.SubmitFormHandler)
 }
 
-func submitLogin(c echo.Context) error {
+func SubmitLogin(c echo.Context) error {
 	// Authentifier l'utilisateur
-	err := controllers.SubmitLoginHandler(c)
+	err := controllers.SubmitLoginHandler(c, services.VerifUserSql)
 	if err != nil {
 		c.Echo().Logger.Errorf("Erreur lors de la soumission du login: %v", err)
 		return c.Render(http.StatusUnauthorized, "login.html", map[string]interface{}{
