@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 	"wst/models"
 
@@ -23,7 +22,6 @@ func SubmitLoginHandler(c echo.Context, verifUser VerifUserFunc) error {
 	err := verifUser(user)
 	if err != nil {
 		data["messageError"] = "Nom d'utilisateur ou mot de passe incorrect"
-		log.Printf("Erreur d'authentification : %v", err)
 		c.Echo().Logger.Infof("Rendering login.html with error message.")
 		return c.Render(http.StatusUnauthorized, "login.html", map[string]interface{}{
 			"ContentTemplate": "login.html",
